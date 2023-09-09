@@ -1,0 +1,3 @@
+[submodule "src/EnchCoreApi.TrProtocol"]
+	path = src/EnchCoreApi.TrProtocol
+	url = https://github.com/CedaryCat/EnchCoreApi.TrProtocol.git
