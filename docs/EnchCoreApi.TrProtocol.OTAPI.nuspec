@@ -12,7 +12,7 @@
     <description>
 		On the basis of OTAPI, by pulling out the common types to achieve friendly compatibility with the protocol library
 	</description>
-    <summary>Open Terraria API [INJECT_VERSION] for Terraria 1.4.3.6[INJECT_GIT_HASH]</summary>
+    <summary>OTAPI Protocol Compatible [INJECT_VERSION] for Open Terraria API [INJECT_OTAPI_VERSION] - Terraria 1.4.3.6[INJECT_GIT_HASH]</summary>
     <releaseNotes>
       Preliminary Terraria 1.4.3.6
     </releaseNotes>
