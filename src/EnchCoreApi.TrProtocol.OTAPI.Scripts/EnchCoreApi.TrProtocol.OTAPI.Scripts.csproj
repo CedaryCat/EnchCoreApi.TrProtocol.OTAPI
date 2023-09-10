@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+	
+  <ItemGroup>
+	  <Reference Include="OTAPI" Condition="Exists('..\EnchCoreApi.TrProtocol.OTAPI\bin\Debug\net6.0\OTAPI.dll') And '$(Configuration)'=='Debug' ">
+		  <HintPath>..\EnchCoreApi.TrProtocol.OTAPI\bin\Debug\net6.0\OTAPI.dll</HintPath>
+	  </Reference>
+	  <Reference Include="OTAPI" Condition="Exists('..\EnchCoreApi.TrProtocol.OTAPI\bin\Release\net6.0\OTAPI.dll') And '$(Configuration)'=='Release' ">
+		  <HintPath>..\EnchCoreApi.TrProtocol.OTAPI\bin\Release\net6.0\OTAPI.dll</HintPath>
+	  </Reference>
+  </ItemGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="ModFramework" Version="1.1.7" />
+    <PackageReference Include="MonoMod" Version="22.5.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Steamworks.NET" Version="20.1.0" />
+  </ItemGroup>
+
+</Project>

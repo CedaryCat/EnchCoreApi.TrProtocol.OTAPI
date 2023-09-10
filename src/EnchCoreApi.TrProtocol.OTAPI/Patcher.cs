@@ -16,8 +16,6 @@ namespace EnchCoreApi.TrProtocol.OTAPI
 
         public virtual string DisplayText => "OTAPI PC Server - Protocol Compatible";
 
-        public virtual string InstallDestination { get; } = Environment.CurrentDirectory;
-
         public virtual string OutputDirectory => Path.Combine(ModContext.BaseDirectory, "outputs");
 
         public virtual NugetPackageBuilder NugetPackager { get; } = new("EnchCoreApi.TrProtocol.OTAPI.nupkg", "../../../../../docs/EnchCoreApi.TrProtocol.OTAPI.nuspec");
@@ -63,11 +61,42 @@ namespace EnchCoreApi.TrProtocol.OTAPI
                     typeof(MessageID).Assembly.Location,
                 });
 
-                //ModContext.ReferenceFiles.Add(refs);
 
+
+                this.Patch("Applying types migration and custom convertion", input, temp, false, (modType, modder) =>
+                {
+                    if (modder is not null)
+                    {
+                        if (modType == ModType.PreRead)
+                        {
+                            modder.AssemblyResolver.AddSearchDirectory(embeddedResources);
+                        }
+                        else if (modType == ModType.Read)
+                        {
+                            var logger = new ConsoleLogger();
+
+                            var typeMigration = new TypeMigrationModify(modder, typeof(MessageID).Assembly);
+                            typeMigration.Run(logger);
+
+                            logger.WriteLine();
+                            logger.WriteLine($"Types have been exported. The following are the successfully exported types");
+                            foreach (var t in typeMigration.Forwardeds)
+                                logger.WriteLine($"Exported::{t}");
+                            logger.WriteLine();
+
+                            // merge custom convertion
+                            modder.ReadMod(typeof(Convertion.Convertion).Assembly.Location);
+
+                        }
+                    }
+                    return EApplyResult.Continue;
+                });
+
+                ModContext.ReferenceFiles.Add(temp);
                 // load into the current app domain for patch refs
-                //var asm = Assembly.LoadFile(refs);
+                var asm = Assembly.LoadFile(temp);
                 var cache = new Dictionary<string, Assembly>();
+                AssemblyLoadContext.Default.Resolving += ResolvingFile;
 
                 Assembly? ResolvingFile(AssemblyLoadContext arg1, AssemblyName args)
                 {
@@ -75,11 +104,11 @@ namespace EnchCoreApi.TrProtocol.OTAPI
                     if (cache.TryGetValue(args.Name, out Assembly? asmm))
                         return asmm;
 
-                    //if (args.Name == asm.GetName().Name) //.IndexOf("TerrariaServer") > -1)
-                    //{
-                    //    cache[args.Name] = asm;
-                    //    return asm;
-                    //}
+                    if (args.Name == asm.GetName().Name) //.IndexOf("TerrariaServer") > -1)
+                    {
+                        cache[args.Name] = asm;
+                        return asm;
+                    }
 
                     var dll = $"{args.Name}.dll";
                     if (File.Exists(dll))
@@ -91,40 +120,9 @@ namespace EnchCoreApi.TrProtocol.OTAPI
 
                     return null;
                 }
-
-                AssemblyLoadContext.Default.Resolving += ResolvingFile;
                 try
                 {
-                    this.Patch("Applying types migration and custom convertion", input, temp, false, (modType, modder) =>
-                    {
-                        if (modder is not null)
-                        {
-                            if (modType == ModType.PreRead)
-                            {
-                                modder.AssemblyResolver.AddSearchDirectory(embeddedResources);
-                            }
-                            else if (modType == ModType.Read)
-                            {
-                                var logger = new ConsoleLogger();
-
-                                var typeMigration = new TypeMigrationModify(modder, typeof(MessageID).Assembly);
-                                typeMigration.Run(logger);
-
-                                logger.WriteLine();
-                                logger.WriteLine($"Types have been exported. The following are the successfully exported types");
-                                foreach (var t in typeMigration.Forwardeds)
-                                    logger.WriteLine($"Exported::{t}");
-                                logger.WriteLine();
-
-                                // merge custom convertion
-                                modder.ReadMod(typeof(Convertion.Convertion).Assembly.Location);
-
-                            }
-                        }
-                        return EApplyResult.Continue;
-                    }); 
-
-                    this.Patch("Add Easy Cast", temp, otapi, false, (modType, modder) =>
+                    this.Patch("Add modifications", temp, otapi, false, (modType, modder) =>
                     {
                         if (modder is not null)
                         {
@@ -137,10 +135,13 @@ namespace EnchCoreApi.TrProtocol.OTAPI
                                 var logger = new ConsoleLogger();
                                 var easycastModify = new EasyCastModify(modder, typeof(MessageID).Assembly);
                                 easycastModify.Run(logger);
+
+                                ModContext.PluginLoader.AddFromFolder(Path.Combine(ModContext.BaseDirectory, "modifications"));
                             }
                             else if (modType == ModType.PreWrite)
                             {
                                 modder.ModContext.TargetAssemblyName = "OTAPI"; // change the target assembly since otapi is now valid for write events
+                                AddEnvMetadata(modder);
                             }
                             else if (modType == ModType.Write)
                             {
@@ -177,6 +178,18 @@ namespace EnchCoreApi.TrProtocol.OTAPI
             var extractor = new ResourceExtractor();
             var embeddedResourcesDir = extractor.Extract(fileinput, dir);
             return embeddedResourcesDir;
+        }
+
+        public static void AddEnvMetadata(ModFwModder modder)
+        {
+            var commitSha = Common.GetGitCommitSha();
+            var run = Environment.GetEnvironmentVariable("GITHUB_RUN_NUMBER")?.Trim();
+
+            if (!String.IsNullOrWhiteSpace(commitSha))
+                modder.AddMetadata("GitHub.Commit", commitSha);
+
+            if (!String.IsNullOrWhiteSpace(run))
+                modder.AddMetadata("GitHub.Action.RunNo", run);
         }
 
         public void WriteCIArtifacts(string outputFolder)
