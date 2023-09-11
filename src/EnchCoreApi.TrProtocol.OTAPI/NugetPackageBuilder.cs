@@ -27,14 +27,25 @@ namespace EnchCoreApi.TrProtocol.OTAPI
             NuspecPath = nuspecPath;
         }
 
-        public void Build(ModFwModder modder, string version, string outputDir)
+        public void Build(ModFwModder modder, string otapiVersion, string outputDir)
         {
             var nuspec_xml = File.ReadAllText(NuspecPath);
-            nuspec_xml = nuspec_xml.Replace("[INJECT_VERSION]", GetNugetVersionFromAssembly<Patcher>());
-            nuspec_xml = nuspec_xml.Replace("[INJECT_OTAPI_VERSION]", version);
 
-            var commitSha = Common.GetGitCommitSha();
-            nuspec_xml = nuspec_xml.Replace("[INJECT_GIT_HASH]", String.IsNullOrWhiteSpace(commitSha) ? "" : $" git#{commitSha}");
+            nuspec_xml = nuspec_xml.Replace("[INJECT_OTAPI_VERSION]", otapiVersion);
+
+            var version = GetNugetVersionFromAssembly<Patcher>();
+            var gitIndex = version.IndexOf('+');
+            if (gitIndex > -1)
+            {
+                var gitCommitSha = version[(gitIndex + 1)..];
+                version = version[..gitIndex];
+                nuspec_xml = nuspec_xml.Replace("[INJECT_GIT_HASH]", $" git#{gitCommitSha}");
+            }
+            else
+            {
+                nuspec_xml = nuspec_xml.Replace("[INJECT_GIT_HASH]", "");
+            }
+            nuspec_xml = nuspec_xml.Replace("[INJECT_VERSION]", version);
 
             var platforms = new[] { "net6.0" }; // relinker only does net6 currently. until there is a reason to implement it...
             var steamworks = modder.Module.AssemblyReferences.First(x => x.Name == "Steamworks.NET");
