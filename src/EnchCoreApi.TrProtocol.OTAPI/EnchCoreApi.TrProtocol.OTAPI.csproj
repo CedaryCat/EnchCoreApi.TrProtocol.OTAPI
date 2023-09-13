@@ -6,9 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
-	<Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.10</AssemblyVersion>
+    <FileVersion>1.0.1.10</FileVersion>
+	<Version>1.0.2-rc</Version>
 	<PackageReleaseNotes>Initial 1.4.4.9 support</PackageReleaseNotes>
   </PropertyGroup>
 	

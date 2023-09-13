@@ -175,7 +175,7 @@ namespace EnchCoreApi.TrProtocol.OTAPI.Modifies
                                 {
                                     var convertFrom_refleField = (System.Reflection.FieldInfo)convertFrom_member;
 
-                                    logger.WriteLine($"|映射源:{convertFrom_refleType.FullName}|Field:{convertFrom_member.Name}[类型:{convertFrom_refleField.FieldType.FullName}]", log);
+                                    logger.WriteLine($"|Mapping source:{convertFrom_refleType.FullName}|Field:{convertFrom_member.Name}[type:{convertFrom_refleField.FieldType.FullName}]", log);
 
                                     var convertTo_Field = convertTo_type.Fields.FirstOrDefault(f => f.Name == convertFrom_member.Name);
 

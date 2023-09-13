@@ -129,6 +129,7 @@ namespace EnchCoreApi.TrProtocol.OTAPI
                             if (modType == ModType.PreRead)
                             {
                                 modder.AssemblyResolver.AddSearchDirectory(embeddedResources);
+                                modder.AddTask<CoreLibRelinker>();
                             }
                             else if (modType == ModType.Read)
                             {
