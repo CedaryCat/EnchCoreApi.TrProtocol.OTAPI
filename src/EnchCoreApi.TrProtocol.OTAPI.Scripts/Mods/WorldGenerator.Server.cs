@@ -1,7 +1,9 @@
 ﻿using ModFramework;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using System.Diagnostics;
 using System.Linq;
+using Terraria;
 
 #pragma warning disable CS8321 // Local function is declared but never used
 [Modification(ModType.PostMerge, "Hooking WorldGenerator...")]
@@ -11,11 +13,19 @@ void HookWorldGenerator(ModFramework.ModFwModder modder)
     MakeAllVirtual(modder.GetDefinition<Terraria.WorldBuilding.WorldGenerator>());
     modder.OnRewritingMethodBody += (modder, body, instr, instri) =>
     {
+        if (!Debugger.IsAttached) {
+            Debugger.Launch();
+        }
+        if (body.Method.Name == nameof(WorldGen.GenerateWorld)) {
+            if (!Debugger.IsAttached) {
+                Debugger.Launch();
+            }
+        }
         if (instr.OpCode == OpCodes.Newobj)
         {
             if (body.Method.DeclaringType.FullName.Contains(nameof(OTAPI))) return;
-            var operandMethod = instr.Operand as MethodReference;
-            if (operandMethod.DeclaringType == modder.GetDefinition<Terraria.WorldBuilding.WorldGenerator>())
+            var operandMethod = (MethodReference)instr.Operand;
+            if (operandMethod.DeclaringType.FullName == modder.GetDefinition<Terraria.WorldBuilding.WorldGenerator>().FullName)
             {
                 instr.OpCode = OpCodes.Call;
                 instr.Operand = modder.Module.ImportReference(modder.GetMethodDefinition(() => OTAPI.Hooks.WorldGen.CreateWorldGeneratorInstance(0, null)));

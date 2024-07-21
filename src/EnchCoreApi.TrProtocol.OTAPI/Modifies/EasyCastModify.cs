@@ -288,7 +288,7 @@ namespace EnchCoreApi.TrProtocol.OTAPI.Modifies
             {
                 logger.WriteLine($"The '{opMethod.Name}' member mapping has been determined:<Copy>: {memberTypeFrom.FullName} => {memberTypeTo.FullName}", parentLog);
                 opMethod.Body.Instructions.Add(Instruction.Create(OpCodes.Dup));
-                opMethod.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg, opMethod.Parameters[0]));
+                opMethod.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
                 opMethod.Body.Instructions.Add(getValue());
                 opMethod.Body.Instructions.Add(setValue());
                 return;

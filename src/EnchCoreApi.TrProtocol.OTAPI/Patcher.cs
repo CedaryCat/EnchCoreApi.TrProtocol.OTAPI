@@ -137,7 +137,7 @@ namespace EnchCoreApi.TrProtocol.OTAPI
                                 var easycastModify = new EasyCastModify(modder, typeof(MessageID).Assembly);
                                 easycastModify.Run(logger);
 
-                                ModContext.PluginLoader.AddFromFolder(Path.Combine(ModContext.BaseDirectory, "modifications"));
+                                //ModContext.PluginLoader.AddFromFolder(Path.Combine(ModContext.BaseDirectory, "modifications"));
                             }
                             else if (modType == ModType.PreWrite)
                             {

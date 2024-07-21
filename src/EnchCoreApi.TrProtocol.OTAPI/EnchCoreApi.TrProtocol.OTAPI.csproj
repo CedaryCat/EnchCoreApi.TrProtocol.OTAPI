@@ -6,9 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>1.0.1.10</AssemblyVersion>
-    <FileVersion>1.0.1.10</FileVersion>
-	<Version>1.0.2-rc</Version>
+    <AssemblyVersion>1.0.3</AssemblyVersion>
+    <FileVersion>1.0.3</FileVersion>
+	<Version>1.0.3</Version>
 	<PackageReleaseNotes>Initial 1.4.4.9 support</PackageReleaseNotes>
   </PropertyGroup>
 	
@@ -27,26 +27,6 @@
     <ProjectReference Include="..\EnchCoreApi.TrProtocol\src\EnchCoreApi.TrProtocol.Convertion\EnchCoreApi.TrProtocol.Convertion.csproj" />
     <ProjectReference Include="..\EnchCoreApi.TrProtocol\src\EnchCoreApi.TrProtocol\EnchCoreApi.TrProtocol.csproj" />
   </ItemGroup>
-
-  <ItemGroup> 
-    <Refs Include="$(MSBuildProjectDirectory)\..\EnchCoreApi.TrProtocol.OTAPI.Scripts\*.refs" />
-    <Patches Include="$(MSBuildProjectDirectory)\..\EnchCoreApi.TrProtocol.OTAPI.Scripts\Patches\**\*.cs" />
-    <TopLevelScripts Include="$(MSBuildProjectDirectory)\..\EnchCoreApi.TrProtocol.OTAPI.Scripts\Mods\**\*.cs" />
-    <!--<Shims Include="$(MSBuildProjectDirectory)\..\EnchCoreApi.TrProtocol.OTAPI.Scripts\Shims\**\*.cs" />-->
-  </ItemGroup>
-	
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <RemoveDir Directories="$(TargetDir)modifications\" />
-    <MakeDir Directories="$(TargetDir)modifications\" />
-    <Copy SourceFiles="$(TargetDir)ModFramework.Modules.CSharp.dll" DestinationFolder="$(TargetDir)modifications" SkipUnchangedFiles="false" />
-    <MakeDir Directories="$(TargetDir)csharp\" />
-    <RemoveDir Directories="$(TargetDir)csharp\plugins\" />
-    <MakeDir Directories="$(TargetDir)csharp\plugins\" />
-    <Copy SourceFiles="@(Refs)" DestinationFolder="$(TargetDir)csharp/plugins/" />
-    <Copy SourceFiles="@(Patches)" DestinationFolder="$(TargetDir)csharp/plugins/patches/terraria/%(RecursiveDir)" />
-    <Copy SourceFiles="@(TopLevelScripts)" DestinationFolder="$(TargetDir)csharp/plugins/mods/terraria/%(RecursiveDir)" />
-    <!--<Copy SourceFiles="@(Shims)" DestinationFolder="$(TargetDir)csharp/plugins/shims/terraria/%(RecursiveDir)" />-->
-  </Target>
 	
   <Target Name="CleanAll" AfterTargets="Clean">
     <RemoveDir Directories="$(OUTDIR)" />
