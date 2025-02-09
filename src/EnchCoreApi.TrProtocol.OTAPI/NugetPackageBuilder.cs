@@ -55,7 +55,7 @@ namespace EnchCoreApi.TrProtocol.OTAPI
                 (typeof(MessageID).Assembly.GetName().Name, Version: GetNugetVersionFromAssembly<MessageID>()),
                 (typeof(ModFwModder).Assembly.GetName().Name, Version: GetNugetVersionFromAssembly<ModFwModder>()),
                 (typeof(MonoMod.MonoModder).Assembly.GetName().Name, Version: typeof(MonoMod.MonoModder).Assembly.GetName().Version.ToString()),
-                (typeof(MonoMod.RuntimeDetour.Detour).Assembly.GetName().Name, Version: typeof(MonoMod.RuntimeDetour.Detour).Assembly.GetName().Version.ToString()),
+                (typeof(MonoMod.RuntimeDetour.Hook).Assembly.GetName().Name, Version: typeof(MonoMod.RuntimeDetour.Hook).Assembly.GetName().Version.ToString()),
                 (steamworks.Name, Version: steamworks.Version.ToString()),
                 (newtonsoft.Name, Version: GetNugetVersionFromAssembly<Newtonsoft.Json.JsonConverter>().Split('+')[0]  ),
             };

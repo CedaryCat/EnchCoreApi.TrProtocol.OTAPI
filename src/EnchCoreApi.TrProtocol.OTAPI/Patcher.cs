@@ -223,14 +223,14 @@ namespace EnchCoreApi.TrProtocol.OTAPI
                     InputPath = input,
                     OutputPath = output,
                     MissingDependencyThrow = false,
-                    PublicEverything = publicEverything,
 
                     LogVerboseEnabled = true,
-
-                    GACPaths = new string[] { }, // avoid MonoMod looking up the GAC, which causes an exception on .netcore
+                    GACPaths = [], // avoid MonoMod looking up the GAC, which causes an exception on .netcore
 
                     //EnableWriteEvents = writeEvents,
                 };
+
+                Console.WriteLine(mm.GACPaths);
 
                 AddSearchDirectories(mm);
                 mm.AddTask<CoreLibRelinker>();
