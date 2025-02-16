@@ -13,7 +13,7 @@
 	<PackageReleaseNotes>Initial 1.4.4.9 support</PackageReleaseNotes>
   </PropertyGroup>
 	
-  <ItemGroup>
+  <ItemGroup> 
 	  <PackageReference Include="ModFramework" Version="1.1.13" />
 	  <PackageReference Include="MonoMod.RuntimeDetour.HookGen" Version="22.7.31.1" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
